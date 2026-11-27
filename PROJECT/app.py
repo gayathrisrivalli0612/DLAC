@@ -22,24 +22,32 @@ st.write(
 
 st.divider()
 
+
 # --------------------------------------------------
 # LOAD EXPERIMENT DATA
 # --------------------------------------------------
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
 @st.cache_data
 def load_data():
-    results = pd.read_csv("final_results.csv")
-    history = pd.read_csv("training_history.csv")
+    results_path = BASE_DIR / "final_results.csv"
+    history_path = BASE_DIR / "training_history.csv"
+
+    results = pd.read_csv(results_path)
+    history = pd.read_csv(history_path)
+
     return results, history
 
 try:
     results_df, history_df = load_data()
-except FileNotFoundError:
-    st.error(
-        "CSV files not found. Place final_results.csv and "
-        "training_history.csv in the same folder as app.py."
-    )
+
+except FileNotFoundError as e:
+    st.error(f"CSV file not found: {e}")
     st.stop()
+
 
 # --------------------------------------------------
 # OVERVIEW METRICS
